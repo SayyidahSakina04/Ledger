@@ -111,13 +111,3 @@ npm run android   # expo start --android
 npm run web       # expo start --web
 npx tsc --noEmit  # type-check
 ```
-
-## Status / roadmap
-
-- **Step 0** — Supabase backend (auth, tables, RLS, storage) — done
-- **Step 1** — Navigation, state layers, Atomic Design components, theming — done
-- **Step 2** — Sign-in & login-gated routes — done
-- **Step 3** — Loading & saving data with React Query — done
-- **Step 4** — Transactions list (FlatList) — in progress
-- **Step 5** — Add / edit form
-- **Step 6** — Push notifications
