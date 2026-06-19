@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { Text } from '@/components/Themed';
 import { spacing } from '@/constants/theme';
 
-// Shared empty view (e.g. FlatList's ListEmptyComponent in Step 4).
+// Shared empty view (e.g. a FlatList's ListEmptyComponent).
 export function EmptyState({
   title = 'Nothing here yet',
   message,

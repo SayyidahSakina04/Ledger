@@ -38,3 +38,11 @@ Put the Supabase anon key directly in the app's env config, not treated as a sec
 Why: the anon key is designed to be shipped inside client apps — it's not actually a credential that grants access on its own. It only lets you do whatever your RLS policies allow, nothing more. That's exactly why getting RLS right (Steps 0–above) mattered so much: the database is what protects each user's data, not the key.
 
 Important distinction: the service_role key is completely different — it bypasses RLS entirely and can read/write anything. That one must never go in the app or get committed to Git. Only the anon key belongs in client code.
+
+## Navigation: `unstable_settings` and `initialRouteName`
+
+Set `initialRouteName: 'index'` in `unstable_settings` at the root layout.
+
+Why: if someone opens the app from a deep link (e.g. tapping a notification that goes straight to a transaction screen), there's no navigation history yet. This tells Expo Router to treat `index` as the screen that lives "behind" whatever screen was opened directly — so the back button has somewhere sensible to go instead of just closing the app.
+
+Note: the `unstable_` prefix doesn't mean broken. It just means Expo hasn't committed to the final name for this API yet. It works fine as-is.

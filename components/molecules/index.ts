@@ -4,3 +4,4 @@ export { ControlledField } from './ControlledField';
 export { Loading } from './Loading';
 export { EmptyState } from './EmptyState';
 export { ErrorState } from './ErrorState';
+export { CategoryChip } from './CategoryChip';

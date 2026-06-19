@@ -86,12 +86,14 @@ app/                      Routes (Expo Router). These are the "pages".
 
 components/               Atomic Design layers
   atoms/                  Button, Input, Spinner (+ themed Text/View)
-  molecules/              Field, Loading, EmptyState, ErrorState
+  molecules/              Field, ControlledField, Loading, EmptyState, ErrorState
   templates/              ScreenLayout
+hooks/                    Data hooks: useTransactions, useCategories, mutations
+lib/                      supabase client, React Query client, query keys
+  api/                    Supabase data access (transactions, categories)
 constants/                Theme tokens (colors, spacing, radius)
 context/                  React Context: ThemeContext, SessionContext
 store/                    Redux Toolkit store + slices + typed hooks
-lib/                      supabase client, React Query client
 ```
 
 ## State, at a glance

@@ -11,7 +11,7 @@ const MODES: ThemeMode[] = ['light', 'dark', 'system'];
 const label = (m: ThemeMode) => m.charAt(0).toUpperCase() + m.slice(1);
 
 // The real theme toggle. Tapping a mode updates the ThemeContext, which re-themes
-// the whole app immediately (Step 1 "done when").
+// the whole app immediately.
 export default function AppearanceScreen() {
   const { mode, setMode } = useTheme();
 

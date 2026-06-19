@@ -2,9 +2,9 @@
 
 export type TransactionType = 'income' | 'expense';
 
+// Categories are a shared, predefined reference table (no per-user ownership).
 export type Category = {
   id: string;
-  user_id: string;
   name: string;
   icon: string | null;
   color: string | null;
@@ -35,7 +35,7 @@ export type TransactionInput = {
   receipt_url?: string | null;
 };
 
-// The list's search/filter inputs (their values live in Redux, see Step 4).
+// The list's search/filter inputs (their values live in Redux).
 export type TransactionFilters = {
   search?: string;
   categoryId?: string | null;

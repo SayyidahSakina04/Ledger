@@ -1,26 +1,26 @@
 import { router, Stack } from 'expo-router';
-import { View } from 'react-native';
 
-import { Button } from '@/components/atoms/Button';
-import { Text } from '@/components/Themed';
+import { TransactionForm } from '@/components/organisms/TransactionForm';
 import { ScreenLayout } from '@/components/templates/ScreenLayout';
-import { spacing } from '@/constants/theme';
+import { useCreateTransaction } from '@/hooks/useTransactionMutations';
 
-// Modal pop-up, reachable from more than one place (e.g. the list and a + button).
-// The real form (React Hook Form + zod + pickers) is built in Step 5.
+// Modal pop-up, reachable from the list's "+ Add". The form itself is shared
+// with the edit screen — here we just hand it a "create" submit handler.
 export default function AddTransactionModal() {
+  const createTransaction = useCreateTransaction();
+
   return (
     <ScreenLayout>
       <Stack.Screen options={{ title: 'Add transaction' }} />
-      <View style={{ gap: spacing.md }}>
-        <Text style={{ fontSize: 20, fontWeight: '700' }}>Add transaction</Text>
-        <Text>The form is built in Step 5.</Text>
-        <Button
-          title="Close"
-          variant="secondary"
-          onPress={() => router.back()}
-        />
-      </View>
+      <TransactionForm
+        submitLabel="Save"
+        onSubmit={async (input) => {
+          await createTransaction.mutateAsync(input);
+          // The optimistic update already added the row to the list behind us.
+          router.back();
+        }}
+        onCancel={() => router.back()}
+      />
     </ScreenLayout>
   );
 }

@@ -8,7 +8,7 @@ import {
 import { queryKeys } from '@/lib/queryKeys';
 import type { TransactionFilters } from '@/lib/types';
 
-// Paginated list of transactions. Step 4's FlatList calls fetchNextPage() on scroll.
+// Paginated list of transactions. The FlatList calls fetchNextPage() on scroll.
 export function useTransactions(filters: TransactionFilters = {}) {
   return useInfiniteQuery({
     queryKey: queryKeys.transactions(filters),

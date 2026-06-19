@@ -4,7 +4,7 @@ import { Spinner } from '@/components/atoms/Spinner';
 import { Text } from '@/components/Themed';
 import { spacing } from '@/constants/theme';
 
-// Shared loading view. Every screen uses the same one (Step 3 guideline).
+// Shared loading view. Every screen uses the same one.
 export function Loading({ message = 'Loading…' }: { message?: string }) {
   return (
     <View style={styles.center}>

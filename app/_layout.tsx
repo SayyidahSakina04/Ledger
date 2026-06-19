@@ -1,9 +1,5 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider as NavThemeProvider,
-} from '@react-navigation/native';
+import { DarkTheme, DefaultTheme, ThemeProvider as NavThemeProvider, } from '@react-navigation/native';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
@@ -19,8 +15,7 @@ import { queryClient } from '@/lib/queryClient';
 import { store } from '@/store';
 
 export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
+  ErrorBoundary, 
 } from 'expo-router';
 
 export const unstable_settings = {
@@ -50,9 +45,9 @@ export default function RootLayout() {
     return null;
   }
 
-  // The three state layers (Context / Redux / React Query) + safe area, wrapped
-  // once around the whole navigation tree. Order matters only in that consumers
-  // must sit inside their provider.
+  // The three state layers (Context / Redux / React Query) + safe area, 
+  // wrapped once around the whole navigation tree. 
+  // Order matters only in that consumers must sit inside their provider.
   return (
     <SafeAreaProvider>
       <ThemeProvider>
