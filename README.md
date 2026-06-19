@@ -114,10 +114,10 @@ npx tsc --noEmit  # type-check
 
 ## Status / roadmap
 
-- [x] **Step 0** — Supabase backend (auth, tables, RLS, storage)
-- [x] **Step 1** — Navigation, state layers, Atomic Design components, theming
-- [ ] **Step 2** — Sign-in & login-gated routes
-- [ ] **Step 3** — Loading & saving data with React Query
-- [ ] **Step 4** — Transactions list (FlatList)
-- [ ] **Step 5** — Add / edit form
-- [ ] **Step 6** — Push notifications
+- **Step 0** — Supabase backend (auth, tables, RLS, storage) — done
+- **Step 1** — Navigation, state layers, Atomic Design components, theming — done
+- **Step 2** — Sign-in & login-gated routes — done
+- **Step 3** — Loading & saving data with React Query — done
+- **Step 4** — Transactions list (FlatList) — in progress
+- **Step 5** — Add / edit form
+- **Step 6** — Push notifications
