@@ -10,8 +10,11 @@ import {
   deleteTransaction,
   updateTransaction,
 } from '@/lib/api/transactions';
+import { log } from '@/lib/logger';
 import { queryKeys } from '@/lib/queryKeys';
 import type { Transaction, TransactionInput } from '@/lib/types';
+
+const SCOPE = 'mutation/transactions';
 
 // The cached shape of an infinite transactions list: pages of rows.
 type TxListData = InfiniteData<Transaction[]>;
@@ -31,6 +34,7 @@ export function useCreateTransaction() {
       return createTransaction(userId, input);
     },
     onMutate: async (input) => {
+      log.debug(SCOPE, 'create: optimistic insert', { type: input.type });
       // Stop in-flight refetches so they don't overwrite our optimistic change.
       await queryClient.cancelQueries({ queryKey: LIST_KEY });
       const previous = queryClient.getQueriesData<TxListData>({
@@ -61,13 +65,15 @@ export function useCreateTransaction() {
 
       return { previous };
     },
-    onError: (_err, _input, context) => {
+    onError: (err, _input, context) => {
+      log.error(SCOPE, 'create failed, rolling back', String(err));
       // Roll every list back to its pre-mutation snapshot.
       context?.previous?.forEach(([key, data]) =>
         queryClient.setQueryData(key, data),
       );
     },
     onSettled: () => {
+      log.debug(SCOPE, 'create settled, invalidating lists');
       // Reconcile with the server (replaces the temp row with the real one).
       queryClient.invalidateQueries({ queryKey: ['transactions'] });
     },
@@ -87,6 +93,7 @@ export function useUpdateTransaction() {
       input: Partial<TransactionInput>;
     }) => updateTransaction(id, input),
     onMutate: async ({ id, input }) => {
+      log.debug(SCOPE, 'update: optimistic patch', { id });
       await queryClient.cancelQueries({ queryKey: ['transactions'] });
       const previousLists = queryClient.getQueriesData<TxListData>({
         queryKey: LIST_KEY,
@@ -115,7 +122,8 @@ export function useUpdateTransaction() {
 
       return { previousLists, previousDetail, id };
     },
-    onError: (_err, _vars, context) => {
+    onError: (err, _vars, context) => {
+      log.error(SCOPE, 'update failed, rolling back', String(err));
       context?.previousLists?.forEach(([key, data]) =>
         queryClient.setQueryData(key, data),
       );
@@ -127,6 +135,7 @@ export function useUpdateTransaction() {
       }
     },
     onSettled: () => {
+      log.debug(SCOPE, 'update settled, invalidating');
       queryClient.invalidateQueries({ queryKey: ['transactions'] });
     },
   });
@@ -139,6 +148,7 @@ export function useDeleteTransaction() {
   return useMutation({
     mutationFn: (id: string) => deleteTransaction(id),
     onMutate: async (id) => {
+      log.debug(SCOPE, 'delete: optimistic remove', { id });
       await queryClient.cancelQueries({ queryKey: LIST_KEY });
       const previous = queryClient.getQueriesData<TxListData>({
         queryKey: LIST_KEY,
@@ -155,12 +165,14 @@ export function useDeleteTransaction() {
 
       return { previous };
     },
-    onError: (_err, _id, context) => {
+    onError: (err, _id, context) => {
+      log.error(SCOPE, 'delete failed, rolling back', String(err));
       context?.previous?.forEach(([key, data]) =>
         queryClient.setQueryData(key, data),
       );
     },
     onSettled: () => {
+      log.debug(SCOPE, 'delete settled, invalidating');
       queryClient.invalidateQueries({ queryKey: ['transactions'] });
     },
   });

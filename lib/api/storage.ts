@@ -1,6 +1,9 @@
 import { File } from 'expo-file-system';
 
+import { log } from '@/lib/logger';
 import { supabase } from '@/lib/supabase';
+
+const SCOPE = 'api/storage';
 
 // The private bucket created in the backend. Each user can only touch files
 // under a folder named after their own id (enforced by storage RLS policies).
@@ -23,11 +26,16 @@ export async function uploadReceipt(
   // The path MUST start with the user's id — the bucket's RLS policy checks
   // that the first folder equals auth.uid().
   const path = `${userId}/${Date.now()}.${ext}`;
+  log.info(SCOPE, 'uploadReceipt', { path, bytes: bytes.length, contentType });
 
   const { error } = await supabase.storage
     .from(BUCKET)
     .upload(path, bytes, { contentType, upsert: false });
-  if (error) throw new Error(error.message);
+  if (error) {
+    log.error(SCOPE, 'uploadReceipt failed', error.message);
+    throw new Error(error.message);
+  }
+  log.info(SCOPE, 'uploadReceipt ok', { path });
   return path;
 }
 
@@ -40,6 +48,9 @@ export async function getReceiptSignedUrl(
   const { data, error } = await supabase.storage
     .from(BUCKET)
     .createSignedUrl(path, expiresInSeconds);
-  if (error) throw new Error(error.message);
+  if (error) {
+    log.error(SCOPE, 'getReceiptSignedUrl failed', error.message);
+    throw new Error(error.message);
+  }
   return data.signedUrl;
 }
