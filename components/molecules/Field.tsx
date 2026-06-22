@@ -18,7 +18,7 @@ export function Field({ label, error, ...inputProps }: FieldProps) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
+      <Text style={[styles.label, { color: colors.textMuted }]}>{label}</Text>
       <Input error={Boolean(error)} {...inputProps} />
       {error ? (
         <Text style={[styles.error, { color: colors.danger }]}>{error}</Text>
@@ -29,6 +29,12 @@ export function Field({ label, error, ...inputProps }: FieldProps) {
 
 const styles = StyleSheet.create({
   container: { gap: spacing.xs },
-  label: { fontSize: 14, fontWeight: '600' },
+  // Small, muted, uppercase labels give the forms a cleaner, more designed look.
+  label: {
+    fontSize: 12,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
   error: { fontSize: 13 },
 });

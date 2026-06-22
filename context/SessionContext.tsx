@@ -1,13 +1,5 @@
 import type { Session } from '@supabase/supabase-js';
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from 'react';
-
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode, } from 'react';
 import { log } from '@/lib/logger';
 import { queryClient } from '@/lib/queryClient';
 import { supabase } from '@/lib/supabase';

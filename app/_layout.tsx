@@ -45,9 +45,7 @@ export default function RootLayout() {
     return null;
   }
 
-  // The three state layers (Context / Redux / React Query) + safe area, 
-  // wrapped once around the whole navigation tree. 
-  // Order matters only in that consumers must sit inside their provider.
+  // The three state layers (Context / Redux / React Query) + safe area, wrapped once around the whole navigation tree. 
   return (
     <SafeAreaProvider>
       <ThemeProvider>

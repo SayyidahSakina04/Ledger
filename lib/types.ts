@@ -1,8 +1,8 @@
-// Domain types mirroring the Supabase tables. Dates come back as ISO strings.
+// types mirroring the Supabase tables. Dates come back as ISO strings.
 
 export type TransactionType = 'income' | 'expense';
 
-// Categories are a shared, predefined reference table (no per-user ownership).
+// Categories are a shared, predefined reference table for all users.
 export type Category = {
   id: string;
   name: string;

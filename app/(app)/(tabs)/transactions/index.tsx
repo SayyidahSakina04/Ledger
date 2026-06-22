@@ -1,19 +1,12 @@
 import { Link, Stack, useRouter } from 'expo-router';
 import { useEffect, useMemo, useState } from 'react';
-import {
-  FlatList,
-  RefreshControl,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native';
-
+import { FlatList, RefreshControl, StyleSheet, View } from 'react-native';
 import { Input } from '@/components/atoms/Input';
 import { Spinner } from '@/components/atoms/Spinner';
-import { CategoryChip } from '@/components/molecules/CategoryChip';
 import { EmptyState } from '@/components/molecules/EmptyState';
 import { ErrorState } from '@/components/molecules/ErrorState';
 import { Loading } from '@/components/molecules/Loading';
+import { CategoryFilter } from '@/components/organisms/CategoryFilter';
 import { TransactionRow } from '@/components/organisms/TransactionRow';
 import { Text } from '@/components/Themed';
 import { ScreenLayout } from '@/components/templates/ScreenLayout';
@@ -79,37 +72,22 @@ export default function TransactionsScreen() {
         }}
       />
 
-      <Input
-        placeholder="Search notes…"
-        value={searchText}
-        onChangeText={setSearchText}
-        autoCorrect={false}
-        style={styles.search}
-      />
-
-      {categories && categories.length > 0 ? (
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.filterChips}
-          style={styles.filterBar}
-        >
-          {/* "All" clears the category filter (categoryId = null). */}
-          <CategoryChip
-            label="All"
-            selected={categoryId == null}
-            onPress={() => dispatch(setCategoryFilter(null))}
+      <View style={styles.searchRow}>
+        <Input
+          placeholder="Search notes…"
+          value={searchText}
+          onChangeText={setSearchText}
+          autoCorrect={false}
+          style={styles.search}
+        />
+        {categories && categories.length > 0 ? (
+          <CategoryFilter
+            categories={categories}
+            selectedId={categoryId}
+            onSelect={(id) => dispatch(setCategoryFilter(id))}
           />
-          {categories.map((c) => (
-            <CategoryChip
-              key={c.id}
-              label={c.name}
-              selected={categoryId === c.id}
-              onPress={() => dispatch(setCategoryFilter(c.id))}
-            />
-          ))}
-        </ScrollView>
-      ) : null}
+        ) : null}
+      </View>
 
       {isLoading ? (
         <Loading />
@@ -165,10 +143,13 @@ export default function TransactionsScreen() {
 }
 
 const styles = StyleSheet.create({
-  search: { marginBottom: spacing.md },
-  // flexGrow: 0 stops the horizontal scroller from expanding to fill the column.
-  filterBar: { flexGrow: 0, marginBottom: spacing.md },
-  filterChips: { gap: spacing.sm, paddingRight: spacing.md },
+  searchRow: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    alignItems: 'center',
+    marginBottom: spacing.md,
+  },
+  search: { flex: 1 },
   listContent: { flexGrow: 1, gap: spacing.sm },
   footer: { paddingVertical: spacing.md },
   addButton: { fontSize: 16, fontWeight: '600', paddingHorizontal: spacing.sm },

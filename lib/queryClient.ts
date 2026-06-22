@@ -1,7 +1,7 @@
 import { QueryClient } from '@tanstack/react-query';
 
 // One shared React Query client for the whole app. 
-// Server data (transactions, categories) is cached here — and ONLY here.
+// Server data (transactions, categories) is cached here ONLY.
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

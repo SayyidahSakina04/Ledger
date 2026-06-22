@@ -31,4 +31,4 @@ const filtersSlice = createSlice({
 
 export const { setSearch, setCategoryFilter, clearFilters } =
   filtersSlice.actions;
-export default filtersSlice.reducer;
+export default filtersSlice.reducer;  //connects this slice with the store

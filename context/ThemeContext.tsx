@@ -7,10 +7,10 @@ import { darkColors, lightColors, type ThemeColors } from '@/constants/theme';
 export type ThemeMode = 'light' | 'dark' | 'system';
 
 type ThemeContextValue = {
-  mode: ThemeMode; // the user's choice
-  setMode: (mode: ThemeMode) => void; // change it (Settings screen calls this)
-  colors: ThemeColors; // the resolved palette to render with
-  isDark: boolean; // convenience flag
+  mode: ThemeMode;
+  setMode: (mode: ThemeMode) => void;
+  colors: ThemeColors;
+  isDark: boolean;
 };
 
 // undefined default lets useTheme() detect "used outside the provider".
@@ -23,7 +23,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   // Resolve the choice to a concrete light/dark. Only consult the OS for 'system'.
   const isDark = mode === 'system' ? systemScheme === 'dark' : mode === 'dark';
 
-  // Memoise so consumers only re-render when the resolved theme actually changes.
   const value = useMemo<ThemeContextValue>(
     () => ({
       mode,
@@ -39,7 +38,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   );
 }
 
-// The hook every component uses to read theme colors.
+// The hook every component uses to read theme colors
 export function useTheme(): ThemeContextValue {
   const ctx = useContext(ThemeContext);
   if (!ctx) {

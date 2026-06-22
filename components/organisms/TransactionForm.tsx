@@ -157,7 +157,7 @@ export function TransactionForm({
       keyboardShouldPersistTaps="handled"
     >
       <View style={styles.field}>
-        <Text style={styles.label}>Type</Text>
+        <Text style={[styles.label, { color: colors.textMuted }]}>Type</Text>
         <View style={styles.toggle}>
           <Button
             title="Expense"
@@ -183,12 +183,11 @@ export function TransactionForm({
       />
 
       <View style={styles.field}>
-        <Text style={styles.label}>Category</Text>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.chips}
-        >
+        <Text style={[styles.label, { color: colors.textMuted }]}>
+          Category
+        </Text>
+        {/* Wraps onto multiple rows so every category is visible — no scroll. */}
+        <View style={styles.chips}>
           {/* "None" leaves category_id null (it's optional in the schema). */}
           <CategoryChip
             label="None"
@@ -203,11 +202,11 @@ export function TransactionForm({
               onPress={() => setValue('categoryId', c.id)}
             />
           ))}
-        </ScrollView>
+        </View>
       </View>
 
       <View style={styles.field}>
-        <Text style={styles.label}>Date</Text>
+        <Text style={[styles.label, { color: colors.textMuted }]}>Date</Text>
         <Pressable
           onPress={() => setShowDatePicker(true)}
           style={[
@@ -247,7 +246,7 @@ export function TransactionForm({
       />
 
       <View style={styles.field}>
-        <Text style={styles.label}>Receipt</Text>
+        <Text style={[styles.label, { color: colors.textMuted }]}>Receipt</Text>
         {picked ? (
           // A newly picked image previews from its local uri.
           <Image source={{ uri: picked.uri }} style={styles.receipt} />
@@ -285,12 +284,17 @@ export function TransactionForm({
 }
 
 const styles = StyleSheet.create({
-  form: { gap: spacing.md, paddingBottom: spacing.xl },
+  form: { gap: spacing.lg, paddingBottom: spacing.xl },
   field: { gap: spacing.xs },
-  label: { fontSize: 14, fontWeight: '600' },
+  label: {
+    fontSize: 12,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
   toggle: { flexDirection: 'row', gap: spacing.sm },
   toggleButton: { flex: 1 },
-  chips: { gap: spacing.sm, paddingVertical: spacing.xs },
+  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   dateButton: {
     minHeight: 48,
     justifyContent: 'center',

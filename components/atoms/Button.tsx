@@ -1,14 +1,7 @@
-import {
-  Pressable,
-  StyleSheet,
-  type StyleProp,
-  type ViewStyle,
-} from 'react-native';
-
+import { Pressable, StyleSheet, type StyleProp, type ViewStyle, } from 'react-native';
 import { Text } from '@/components/Themed';
 import { radius, spacing } from '@/constants/theme';
 import { useTheme } from '@/context/ThemeContext';
-
 import { Spinner } from './Spinner';
 
 type Variant = 'primary' | 'secondary' | 'danger';

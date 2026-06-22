@@ -171,9 +171,14 @@ export function useDeleteTransaction() {
         queryClient.setQueryData(key, data),
       );
     },
-    onSettled: () => {
-      log.debug(SCOPE, 'delete settled, invalidating');
-      queryClient.invalidateQueries({ queryKey: ['transactions'] });
+    onSettled: (_data, _err, id) => {
+      log.debug(SCOPE, 'delete settled, invalidating lists');
+      // Only refresh the lists. Invalidating the whole 'transactions' prefix
+      // would also refetch this row's detail — which is now gone, so .single()
+      // would throw "Cannot coerce the result to a single JSON object".
+      queryClient.invalidateQueries({ queryKey: LIST_KEY });
+      // Drop the deleted row's detail cache outright (no refetch).
+      queryClient.removeQueries({ queryKey: queryKeys.transaction(id) });
     },
   });
 }

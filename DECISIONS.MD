@@ -46,3 +46,37 @@ Set `initialRouteName: 'index'` in `unstable_settings` at the root layout.
 Why: if someone opens the app from a deep link (e.g. tapping a notification that goes straight to a transaction screen), there's no navigation history yet. This tells Expo Router to treat `index` as the screen that lives "behind" whatever screen was opened directly — so the back button has somewhere sensible to go instead of just closing the app.
 
 Note: the `unstable_` prefix doesn't mean broken. It just means Expo hasn't committed to the final name for this API yet. It works fine as-is.
+
+
+
+## Provider nesting order in `_layout.tsx`
+
+The five providers in `RootLayout` are nested in a specific order because each one depends on what's outside it. A provider can only consume things that wrap it, never things inside it.
+
+```tsx
+<SafeAreaProvider>      // 1. measures screen edges — no dependencies
+  <ThemeProvider>       // 2. needs safe area for themed components
+    <ReduxProvider>     // 3. no dependencies, but React Query needs it for filters
+      <QueryClientProvider> // 4. needs Redux (passes filter state into queries)
+        <SessionProvider>   // 5. needs all of the above — clears cache on logout,
+          <App />           //    redirects based on theme, respects safe area
+        </SessionProvider>
+      </QueryClientProvider>
+    </ReduxProvider>
+  </ThemeProvider>
+</SafeAreaProvider>
+```
+
+**Why this exact order:**
+
+`SafeAreaProvider` is outermost because it has no dependencies of its own — it just measures the screen. Everything else potentially needs those measurements for layout.
+
+`ThemeProvider` comes next because the navigation shell (`RootLayoutNav`) needs it immediately — it reads `isDark` to pass the right theme to React Navigation. If it were inside `ReduxProvider`, that would work too, but theme is the most "global" thing after layout so it sits high.
+
+`ReduxProvider` sits above `QueryClientProvider` because React Query hooks inside screens read Redux state (search text, filters) to build their Supabase queries. Redux has to exist before React Query tries to read from it.
+
+`QueryClientProvider` wraps `SessionProvider` because on logout, `SessionProvider` needs to call `queryClient.clear()` to wipe cached data. That means `SessionProvider` has to be inside `QueryClientProvider` to have access to the client.
+
+`SessionProvider` is the innermost because it depends on everything above it — it reads the theme, dispatches to Redux, clears the React Query cache, and respects safe area. The actual app screens sit inside it so they only render once a session state is known (logged in or logged out).
+
+Trade-off: this nesting means if I ever need to refactor one provider, I have to think about what depends on it from below. The upside is that every screen in the app has access to all five layers without any extra wiring.
