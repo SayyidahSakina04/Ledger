@@ -1,5 +1,4 @@
 import { StyleSheet, View } from 'react-native';
-
 import { Button } from '@/components/atoms/Button';
 import { Text } from '@/components/Themed';
 import { spacing } from '@/constants/theme';

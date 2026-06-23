@@ -6,7 +6,7 @@ import { useTheme } from '@/context/ThemeContext';
 export type InputProps = TextInputProps & {
   // When true, the border turns red to signal a validation error.
   error?: boolean;
-};
+}; // has the TextInputProps as well as error
 
 // Themed text input. Forwards all normal TextInput props (value, onChangeText, etc.).
 export function Input({ error = false, style, ...rest }: InputProps) {

@@ -1,6 +1,6 @@
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Alert, Image, StyleSheet, View } from 'react-native';
+import { Alert, Image, Modal, Pressable, StyleSheet, View } from 'react-native';
 
 import { Button } from '@/components/atoms/Button';
 import { ErrorState } from '@/components/molecules/ErrorState';
@@ -44,6 +44,8 @@ export default function TransactionDetailScreen() {
   // URL the <Image> can load. Re-runs if the receipt changes.
   const receiptPath = transaction?.receipt_url ?? null;
   const [receiptUrl, setReceiptUrl] = useState<string | null>(null);
+  // Whether the full-screen receipt viewer is open.
+  const [viewerOpen, setViewerOpen] = useState(false);
   useEffect(() => {
     let active = true;
     if (receiptPath) {
@@ -114,7 +116,31 @@ export default function TransactionDetailScreen() {
           </View>
 
           {receiptUrl ? (
-            <Image source={{ uri: receiptUrl }} style={styles.receipt} />
+            <>
+              {/* Tap the thumbnail to open the receipt full-screen. */}
+              <Pressable onPress={() => setViewerOpen(true)}>
+                <Image source={{ uri: receiptUrl }} style={styles.receipt} />
+              </Pressable>
+
+              <Modal
+                visible={viewerOpen}
+                transparent
+                animationType="fade"
+                onRequestClose={() => setViewerOpen(false)}
+              >
+                {/* Tap anywhere (or back) to close. contain shows the whole image. */}
+                <Pressable
+                  style={styles.viewerBackdrop}
+                  onPress={() => setViewerOpen(false)}
+                >
+                  <Image
+                    source={{ uri: receiptUrl }}
+                    style={styles.viewerImage}
+                    resizeMode="contain"
+                  />
+                </Pressable>
+              </Modal>
+            </>
           ) : null}
 
           <View style={styles.actions}>
@@ -143,4 +169,11 @@ const styles = StyleSheet.create({
   detailValue: { fontWeight: '600', flexShrink: 1, textAlign: 'right' },
   receipt: { width: '100%', height: 220, borderRadius: radius.md },
   actions: { gap: spacing.sm },
+  viewerBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.92)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  viewerImage: { width: '100%', height: '100%' },
 });

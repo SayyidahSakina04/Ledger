@@ -1,10 +1,4 @@
-import {
-  Controller,
-  type Control,
-  type FieldValues,
-  type Path,
-} from 'react-hook-form';
-
+import { Controller, type Control, type FieldValues, type Path, } from 'react-hook-form';
 import { Field, type FieldProps } from './Field';
 
 // A Field wired to React Hook Form. The form owns the value; this connects the

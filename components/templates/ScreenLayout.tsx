@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { spacing } from '@/constants/theme';
@@ -25,9 +25,16 @@ export function ScreenLayout({
       style={[styles.safe, { backgroundColor: colors.background }]}
       edges={edges}
     >
-      <View style={[styles.content, padded && { padding: spacing.lg }]}>
-        {children}
-      </View>
+      {/* Lifts the content above the keyboard so the focused input stays visible.
+          padding works best on iOS; height on Android. */}
+      <KeyboardAvoidingView
+        style={styles.content}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <View style={[styles.content, padded && { padding: spacing.lg }]}>
+          {children}
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

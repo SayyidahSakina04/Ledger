@@ -1,5 +1,4 @@
 import { StyleSheet, View } from 'react-native';
-
 import { Input, type InputProps } from '@/components/atoms/Input';
 import { Text } from '@/components/Themed';
 import { spacing } from '@/constants/theme';

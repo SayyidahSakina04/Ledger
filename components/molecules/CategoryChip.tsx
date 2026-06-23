@@ -1,11 +1,10 @@
 import { Pressable, StyleSheet } from 'react-native';
-
 import { Text } from '@/components/Themed';
 import { radius, spacing } from '@/constants/theme';
 import { useTheme } from '@/context/ThemeContext';
 
-// A selectable pill — used for choosing a category in the form and (later) for
-// filtering the list. Selected = filled with the primary color.
+// A selectable pill — used for choosing a category in the form and (later) for filtering the list.
+// Selected = filled with the primary color.
 export function CategoryChip({
   label,
   selected,
