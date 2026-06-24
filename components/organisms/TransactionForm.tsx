@@ -40,6 +40,9 @@ export type TransactionFormValues = z.infer<typeof schema>;
 // Today as 'YYYY-MM-DD', the default date for a new transaction.
 const today = toISODate(new Date());
 
+// Preset payment methods shown as chips (instead of free typing).
+const PAYMENT_METHODS = ['Cash', 'Card', 'Bank'];
+
 const emptyValues: TransactionFormValues = {
   type: 'expense',
   amount: '',
@@ -94,6 +97,17 @@ export function TransactionForm({
   const categoryId = watch('categoryId');
   const date = watch('date');
   const receiptUrl = watch('receiptUrl');
+  const paymentMethod = watch('paymentMethod') ?? '';
+
+  // Show the presets, plus any existing custom value (e.g. an older "cash"),
+  // so editing never silently drops a value that isn't one of the presets.
+  const paymentOptions =
+    paymentMethod &&
+    !PAYMENT_METHODS.some(
+      (m) => m.toLowerCase() === paymentMethod.toLowerCase(),
+    )
+      ? [paymentMethod, ...PAYMENT_METHODS]
+      : PAYMENT_METHODS;
 
   // Open the photo library, ask permission if needed, keep the picked image
   // locally (uploaded only on submit, so we never upload an abandoned form).
@@ -237,13 +251,27 @@ export function TransactionForm({
         label="Note"
         placeholder="What was it for?"
       />
-      <ControlledField
-        control={control}
-        name="paymentMethod"
-        label="Payment method"
-        placeholder="card, cash, bank…"
-        autoCapitalize="none"
-      />
+      <View style={styles.field}>
+        <Text style={[styles.label, { color: colors.textMuted }]}>
+          Payment method
+        </Text>
+        <View style={styles.chips}>
+          {/* "None" leaves payment_method null (it's optional in the schema). */}
+          <CategoryChip
+            label="None"
+            selected={!paymentMethod}
+            onPress={() => setValue('paymentMethod', '')}
+          />
+          {paymentOptions.map((m) => (
+            <CategoryChip
+              key={m}
+              label={m}
+              selected={paymentMethod.toLowerCase() === m.toLowerCase()}
+              onPress={() => setValue('paymentMethod', m)}
+            />
+          ))}
+        </View>
+      </View>
 
       <View style={styles.field}>
         <Text style={[styles.label, { color: colors.textMuted }]}>Receipt</Text>

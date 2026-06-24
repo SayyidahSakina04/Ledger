@@ -26,7 +26,8 @@
       "permissions": [
         "android.permission.RECORD_AUDIO"
       ],
-      "package": "com.sayyidah_sakina.Ledger"
+      "package": "com.sayyidah_sakina.Ledger",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "bundler": "metro",

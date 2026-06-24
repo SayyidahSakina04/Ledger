@@ -1,3 +1,5 @@
+import Constants from 'expo-constants';
+import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 
@@ -33,36 +35,41 @@ export async function ensureNotificationPermissions(): Promise<boolean> {
   return granted;
 }
 
-// --- The daily "log your spending" reminder (a local, repeating notification) --
+// --- Push token (the address the backend sends a remote push to) ----------------
 
-// We only ever schedule this one repeating reminder, so cancelling everything
-// before (re)scheduling guarantees we never stack duplicates.
-export async function scheduleDailyReminder(
-  hour: number,
-  minute: number,
-): Promise<void> {
-  await Notifications.cancelAllScheduledNotificationsAsync();
-  await ensureAndroidChannel();
-  await Notifications.scheduleNotificationAsync({
-    content: {
-      title: 'Log your spending',
-      body: "Add today's income and expenses to keep your ledger up to date.",
-      data: { kind: 'daily-reminder' },
-    },
-    // A DAILY trigger fires every day at this local time and repeats on its own —
-    // the OS keeps firing it even when the app is closed.
-    trigger: {
-      type: Notifications.SchedulableTriggerInputTypes.DAILY,
-      hour,
-      minute,
-    },
-  });
-  log.info(SCOPE, 'scheduled daily reminder', { hour, minute });
-}
+// Returns this device's Expo push token, or null if unavailable (simulator, no
+// permission, missing projectId, or — on Android — FCM not yet configured).
+// Best-effort: never throws. The backend stores this per user and sends the
+// daily reminder to it, so it fires even when the app is killed.
+export async function getExpoPushToken(): Promise<string | null> {
+  // Push tokens only exist on real hardware.
+  if (!Device.isDevice) {
+    log.warn(SCOPE, 'not a physical device; no push token');
+    return null;
+  }
 
-export async function cancelDailyReminder(): Promise<void> {
-  await Notifications.cancelAllScheduledNotificationsAsync();
-  log.info(SCOPE, 'cancelled daily reminder');
+  const granted = await ensureNotificationPermissions();
+  if (!granted) return null;
+
+  // getExpoPushTokenAsync needs the EAS project id from app.json (extra.eas).
+  const projectId = Constants.expoConfig?.extra?.eas?.projectId as
+    | string
+    | undefined;
+  if (!projectId) {
+    log.error(SCOPE, 'missing EAS projectId; cannot get a push token');
+    return null;
+  }
+
+  try {
+    const token = await Notifications.getExpoPushTokenAsync({ projectId });
+    log.info(SCOPE, 'obtained expo push token');
+    return token.data;
+  } catch (err) {
+    // Until FCM credentials are configured (Android), this fails — expected
+    // until the prerequisite rebuild is done.
+    log.warn(SCOPE, 'could not get push token', { reason: String(err) });
+    return null;
+  }
 }
 
 // --- Confirmation when a transaction is added (an immediate local notification) -

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "796877593247",
+    "project_id": "ledger-21b73",
+    "storage_bucket": "ledger-21b73.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:796877593247:android:db40a6019d90028400e0aa",
+        "android_client_info": {
+          "package_name": "com.sayyidah_sakina.Ledger"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7mm0beq3TZigId1PgnGujAwphmJFgaXI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,4 +1,5 @@
 // Molecules barrel.
+export { Brand } from './Brand';
 export { Field, type FieldProps } from './Field';
 export { ControlledField } from './ControlledField';
 export { Loading } from './Loading';

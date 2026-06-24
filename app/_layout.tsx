@@ -14,7 +14,6 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider as ReduxProvider } from 'react-redux';
 import 'react-native-reanimated';
 
-import { NotificationsProvider } from '@/context/NotificationsContext';
 import { SessionProvider } from '@/context/SessionContext';
 import { ThemeProvider, useTheme } from '@/context/ThemeContext';
 import { useNotificationTapHandler } from '@/hooks/useNotificationTapHandler';
@@ -65,15 +64,13 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <ThemeProvider>
-        <NotificationsProvider>
-          <ReduxProvider store={store}>
-            <QueryClientProvider client={queryClient}>
-              <SessionProvider>
-                <RootLayoutNav />
-              </SessionProvider>
-            </QueryClientProvider>
-          </ReduxProvider>
-        </NotificationsProvider>
+        <ReduxProvider store={store}>
+          <QueryClientProvider client={queryClient}>
+            <SessionProvider>
+              <RootLayoutNav />
+            </SessionProvider>
+          </QueryClientProvider>
+        </ReduxProvider>
       </ThemeProvider>
     </SafeAreaProvider>
   );

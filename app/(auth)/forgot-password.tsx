@@ -2,10 +2,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Link } from 'expo-router';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { z } from 'zod';
 
 import { Button } from '@/components/atoms/Button';
+import { Brand } from '@/components/molecules/Brand';
 import { ControlledField } from '@/components/molecules/ControlledField';
 import { Text } from '@/components/Themed';
 import { ScreenLayout } from '@/components/templates/ScreenLayout';
@@ -45,43 +46,66 @@ export default function ForgotPasswordScreen() {
 
   return (
     <ScreenLayout>
-      <View style={{ gap: spacing.md }}>
-        <Text style={{ fontSize: 28, fontWeight: '700' }}>Reset password</Text>
+      <View style={styles.container}>
+        <View style={styles.center}>
+          <Brand />
 
-        {sent ? (
-          <Text>
-            If an account exists for that email, a reset link is on its way.
-            Check your inbox.
-          </Text>
-        ) : (
-          <>
-            <Text>Enter your email and we&apos;ll send a reset link.</Text>
-            <ControlledField
-              control={control}
-              name="email"
-              label="Email"
-              placeholder="you@example.com"
-              autoCapitalize="none"
-              autoComplete="email"
-              keyboardType="email-address"
-            />
-            {errors.root ? (
-              <Text style={{ color: colors.danger }}>
-                {errors.root.message}
+          <View style={styles.form}>
+            {sent ? (
+              <Text style={{ textAlign: 'center' }}>
+                If an account exists for that email, a reset link is on its way.
+                Check your inbox.
               </Text>
-            ) : null}
-            <Button
-              title="Send reset link"
-              onPress={onSubmit}
-              loading={isSubmitting}
-            />
-          </>
-        )}
+            ) : (
+              <>
+                <Text style={{ textAlign: 'center', color: colors.textMuted }}>
+                  Enter your email and we&apos;ll send a reset link.
+                </Text>
+                <ControlledField
+                  control={control}
+                  name="email"
+                  label="Email"
+                  placeholder="you@example.com"
+                  autoCapitalize="none"
+                  autoComplete="email"
+                  keyboardType="email-address"
+                />
+                {errors.root ? (
+                  <Text style={{ color: colors.danger }}>
+                    {errors.root.message}
+                  </Text>
+                ) : null}
+                <Button
+                  title="Send reset link"
+                  onPress={onSubmit}
+                  loading={isSubmitting}
+                />
+              </>
+            )}
+          </View>
+        </View>
 
-        <Link href="/login" asChild>
-          <Text style={{ fontWeight: '600' }}>← Back to log in</Text>
-        </Link>
+        <View style={styles.footer}>
+          <Link href="/login" asChild>
+            <Text style={[styles.link, { color: colors.primary }]}>
+              Back to log in
+            </Text>
+          </Link>
+        </View>
       </View>
     </ScreenLayout>
   );
 }
+
+const styles = StyleSheet.create({
+  container: { flex: 1 },
+  center: { flex: 1, justifyContent: 'center', gap: spacing.xl },
+  form: { gap: spacing.md },
+  link: { textAlign: 'center', fontWeight: '600' },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: spacing.xs,
+    paddingVertical: spacing.md,
+  },
+});
