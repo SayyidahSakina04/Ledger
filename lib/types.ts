@@ -2,7 +2,7 @@
 
 export type TransactionType = 'income' | 'expense';
 
-// Categories are a shared, predefined reference table for all users.
+// Categories: a shared, predefined reference table for all users.
 export type Category = {
   id: string;
   name: string;

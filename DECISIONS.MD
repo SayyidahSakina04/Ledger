@@ -80,3 +80,16 @@ The five providers in `RootLayout` are nested in a specific order because each o
 `SessionProvider` is the innermost because it depends on everything above it — it reads the theme, dispatches to Redux, clears the React Query cache, and respects safe area. The actual app screens sit inside it so they only render once a session state is known (logged in or logged out).
 
 Trade-off: this nesting means if I ever need to refactor one provider, I have to think about what depends on it from below. The upside is that every screen in the app has access to all five layers without any extra wiring.
+
+
+
+
+## Notifications: moved daily reminder to server-side push
+
+First built the daily reminder as a local notification scheduled on the phone itself. It worked while the app was open but never fired when the app was swiped away from recents — Android kills scheduled local notifications when the app is closed.
+
+Why: delivery needed to be reliable regardless of whether the app is running. Moved the reminder server-side — the app saves each user's chosen reminder time and push token to Supabase, a backend function runs every 15 minutes, checks who's due, and sends the notification through Expo's push service and Firebase Cloud Messaging. FCM is delivered by Google Play Services, not the app, so it arrives even when the app is completely closed.
+
+Trade-off: more moving parts than a local notification — requires a push token, a Supabase scheduled function, and a Firebase project. But it's the only approach that actually works reliably on Android.
+
+Note: the "transaction saved" confirmation stays a local notification since it only fires while the app is open anyway.

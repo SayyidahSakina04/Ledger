@@ -5,11 +5,10 @@ import { Platform } from 'react-native';
 
 import { log } from '@/lib/logger';
 
-const SCOPE = 'notifications';
+const SCOPE = 'notifications';    // for logging
 
 // The channel notifications are posted to on Android. Android 8+ refuses to show
-// a notification that has no channel, so we create one (idempotent — safe to
-// call on every launch).
+// a notification that has no channel, so we create one (idempotent — safe to call on every launch).
 const ANDROID_CHANNEL_ID = 'default';
 
 export async function ensureAndroidChannel(): Promise<void> {

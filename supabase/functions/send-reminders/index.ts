@@ -1,3 +1,8 @@
+// @ts-nocheck — this file runs in Deno (Supabase Edge Functions), not in the
+// app's Node/React Native TypeScript. The editor can't resolve Deno globals or
+// URL imports, but Deno type-checks it on deploy, so we turn off editor checking
+// for this one file.
+//
 // Supabase Edge Function: send-reminders
 //
 // Called by a pg_cron schedule every 15 minutes. For each user who has the daily

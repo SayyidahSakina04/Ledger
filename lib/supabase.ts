@@ -18,7 +18,6 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
-    // Persist the logged-in session on the device so the user stays signed in.
     storage: AsyncStorage,
     autoRefreshToken: true,
     persistSession: true,
